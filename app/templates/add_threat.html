@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Добавить угрозу</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Добавить новую угрозу</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form action="/add_threat" method="post">
+            <div class="form-group">
+                <label for="name">Название угрозы:</label>
+                <input class="form-control" type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="damage">Ущерб:</label>
+                <input class="form-control" type="text" id="damage" name="damage">
+            </div>
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea class="form-control" id="description" name="description"></textarea>
+            </div>
+            <h2>Эффективность программ против новой угрозы</h2>
+            {% for program in programs %}
+                <div class="form-group">
+                    <label for="efficacy_{{ program.id }}">{{ program.name }} ({{ program.type }}):</label>
+                    <input class="form-control" type="text" id="efficacy_{{ program.id }}" name="efficacy_{{ program.id }}" value="0">
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Добавить угрозу</button>
+        </form>
+        <br>
+        <a class="btn btn-secondary" href="/">Вернуться на главную</a>
+    </div>
+</body>
+</html>

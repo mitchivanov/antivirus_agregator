@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать программу</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Редактировать программу</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="alert-container">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('edit_program', id=program.id) }}" method="post">
+            <div class="form-group">
+                <label for="name">Название программы:</label>
+                <input class="form-control" type="text" id="name" name="name" value="{{ program.name }}">
+            </div>
+            <div class="form-group">
+                <label for="price">Цена:</label>
+                <input class="form-control" type="text" id="price" name="price" value="{{ program.price }}">
+            </div>
+            <div class="form-group">
+                <label for="type">Тип программы:</label>
+                <select class="form-control" id="type" name="type">
+                    <option value="Антивирус" {% if program.type == 'Антивирус' %}selected{% endif %}>Антивирус</option>
+                    <option value="Межсетевой экран" {% if program.type == 'Межсетевой экран' %}selected{% endif %}>Межсетевой экран</option>
+                    <option value="Антивирусная утилита" {% if program.type == 'Антивирусная утилита' %}selected{% endif %}>Антивирусная утилита</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea class="form-control" id="description" name="description">{{ program.description }}</textarea>
+            </div>
+            <h2>Эффективность против угроз</h2>
+            {% for threat in threats %}
+                <div class="form-group">
+                    <label for="efficacy_{{ threat.id }}">{{ threat.name }}:</label>
+                    <input class="form-control" type="text" id="efficacy_{{ threat.id }}" name="efficacy_{{ threat.id }}" value="{{ program.efficacy.get(threat.name, 0) }}">
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Сохранить изменения</button>
+        </form>
+        <br>
+        <a class="btn btn-secondary" href="/">Вернуться на главную</a>
+    </div>
+</body>
+</html>

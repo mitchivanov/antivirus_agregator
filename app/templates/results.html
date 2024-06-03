@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Результаты оптимального набора</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4">Результаты оптимального набора</h1>
+
+        <h2 class="mt-4">Выбранные программы</h2>
+        <div class="row">
+            {% for category, program in optimal_programs.items() %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ category }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if program %}
+                                <p class="card-text"><strong>{{ program['name'] }}</strong> (Цена: {{ program['price'] }})</p>
+                                <p class="card-text">{{ program['description'] }}</p>
+                                <p class="card-text">{{ reasons[category] }}</p>
+                            {% else %}
+                                <p class="card-text">Нет подходящей программы</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2 class="mt-4">Совокупная эффективность против выбранных угроз</h2>
+        <ul class="list-group mb-4">
+            {% for threat, efficiency in total_efficiency.items() %}
+                <li class="list-group-item">{{ threat }}: <strong>{{ efficiency * 100 | round(2) }}%</strong></li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="mt-4">Оптимальные программы по бюджету</h2>
+        <div class="row">
+            {% for category, program in budget_programs.items() %}
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ category }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if program %}
+                                <p class="card-text"><strong>{{ program['name'] }}</strong> (Цена: {{ program['price'] }})</p>
+                                <p class="card-text">{{ program['description'] }}</p>
+                                <p class="card-text">{{ budget_reasons[category] }}</p>
+                            {% else %}
+                                <p class="card-text">Нет подходящей программы</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2 class="mt-4">Совокупная эффективность против выбранных угроз (с учетом бюджета)</h2>
+        <ul class="list-group mb-4">
+            {% for threat, efficiency in budget_total_efficiency.items() %}
+                <li class="list-group-item">{{ threat }}: <strong>{{ efficiency * 100 | round(2) }}%</strong></li>
+            {% endfor %}
+        </ul>
+
+        <a href="/" class="btn btn-secondary mt-4">Вернуться на главную</a>
+    </div>
+</body>
+</html>
